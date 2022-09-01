@@ -1,0 +1,52 @@
+
+Learn how to:
+[ ] Modify tables/models
+[ ] Modify serve responses
+
+Then I can work on the storage and serving of game data.
+
+
+[ ] Ensure users and non-users can't see gamedata they're not authorized for
+  - Require a username + session_token on every http request? Is that enough?
+
+[ ] Establish a login service for aw
+  [ ] Verify two clients (two browser instances) can login to different accounts.
+
+[ ] Implement the gamedata table(s)
+
+[ ] Setup a test game.
+  [ ] The players list should include my test accounts manually. We'll work on a players-browser later; I still don't have the complete UI refactor, I want new menus.
+  [ ] Clients query the server for new turn data. (by date? last known ordinal?)
+    [ ] This must happen even on your turn:
+      - If a player has two clients open viewing the same match, the actions must be synced.
+        - Ideally this wouldn't be allowed at all. However, using two clients to play two different matches sounds cool, so I don't care about that.
+      - Does this mean any turnstate must be interruptible to the ratify step? Hm. Not impossible, but I'll have to think about it.
+      - If you have two clients with the same match open, this actually does introduce race conditions that could royally fuck the board sync. I don't need to worry about it *now,* but this is a severe problem. Either:
+        - You cannot have two clients, or
+        - You cannot have two clients viewing the same game-id
+      The latter is probably not hard to implement. That said, how can I guarantee a player's connection is refused when they already have a client/game-id open?
+  [ ] When it's not your turn, you cannot give orders.
+    [ ] But you can still open the field menu and quit.
+  [ ] Quitting (or closing the browser) and logging back in re-assembles the game board state.
+
+
+
+- When in an online match, the client must know which game-id it's playing. This is how it knows which game to query for net-play updates.
+- When you quit, this is just forgotten. But when you restart the match, this id is used to reassemble.
+
+
+
+Notes for GameMetadata class (because I don't know how/if migrate handles comments/strings):
+
+Metadata table:
+game_id map_ref scenario_options
+
+Players-list table:
+game_id player# player_ref
+  [game_id + player#] should be a unique, primary key
+
+I need to be able to lookup the player's list by account too.
+  - Lookup player accounts by game_id
+  - Lookup game_id/player_number by user account
+The second is more important, I think. I'm not even sure I'll need the first.
+But I should account for both query directions, if possible.
