@@ -1,9 +1,32 @@
 
 Learn how to:
-[ ] Modify tables/models
+[x] Modify tables/models
 [ ] Modify serve responses
+[ ] Perform a test where the client retrieves a (the only) game metadata object.
 
 Then I can work on the storage and serving of game data.
+
+Multiplayer Model: What does the client need to send to the server?
+- User Account + Auth
+  - The system can infer player# from the player list
+- Instruction data
+- Turn ordinal? Or can this be inferred? Maybe just a timestamp, then?
+Also: What does the (other) client need to ask for / receive?
+Request (Send):
+- User Account + Auth
+- Game Id
+- Last known turn ordinal
+Request (Receive):
+- A list of instructions (including turn change)
+- The new turn ordinal to update last_known
+
+^ Use this to construct a server-post/request demo.
+
+
+The models are mostly complete, but
+[ ] some pk's are combination keys
+[ ] some fields are required, so should be marked/handled as such
+  [ ] some are not, also, so handle that somehow
 
 
 [ ] Ensure users and non-users can't see gamedata they're not authorized for

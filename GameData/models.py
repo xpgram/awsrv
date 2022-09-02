@@ -41,6 +41,7 @@ class GameAction(models.Model):
     game_id = models.ForeignKey(GameMetadata, on_delete=models.CASCADE)
     turn_ordinal = models.PositiveIntegerField()
     action_ordinal = models.PositiveIntegerField()
+      # TODO Technically timestamps can solve this problem too... does it matter? Hm.
     player_number = models.PositiveSmallIntegerField(name="Player#")
     command_data = models.CharField(max_length=200)
       # TODO place:path:action:which:focal:seed:drop:drop:drop:drop
