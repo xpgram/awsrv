@@ -8,7 +8,7 @@ from django.utils import timezone
 # Create your models here.
 
 class BattleMap(models.Model):
-    author_account = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
+    author_account = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     in_standard_map_library = models.BooleanField()
     map_name = models.CharField(max_length=64)
 
@@ -29,7 +29,7 @@ class BattleMap(models.Model):
 
 class GameMetadata(models.Model):
     created_on = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True, default=None)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, default=None)
     map_id = models.ForeignKey(BattleMap, on_delete=models.CASCADE)
 
     # global game data
@@ -58,7 +58,7 @@ class GamePlayerList(models.Model):
     game_id = models.ForeignKey(GameMetadata, on_delete=models.CASCADE)
     player_num = models.PositiveSmallIntegerField()
 
-    account = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
+    account = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
 
     # player-specific data for this game (CO, Handicaps, etc.)
     co_id = models.PositiveIntegerField(default=0)  # TODO non-number CO reference

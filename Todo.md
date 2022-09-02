@@ -7,7 +7,6 @@ Learn how to:
 
 Current Todo:
 [ ] readonly_fields does nothing
-[ ] I cannot delete user 'Will' because it unsatisfies ForeignKey constraints; I need to unconstrain them.
 
 
 Then I can work on the storage and serving of game data.
