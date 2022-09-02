@@ -4,6 +4,12 @@ Learn how to:
 [ ] Modify serve responses
 [ ] Perform a test where the client retrieves a (the only) game metadata object.
 
+
+Current Todo:
+[ ] readonly_fields does nothing
+[ ] I cannot delete user 'Will' because it unsatisfies ForeignKey constraints; I need to unconstrain them.
+
+
 Then I can work on the storage and serving of game data.
 
 Multiplayer Model: What does the client need to send to the server?
