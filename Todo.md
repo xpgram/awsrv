@@ -5,6 +5,7 @@ Learn how to:
 [ ] Merge Node/Socket.io and Django systems
   [ ] And how to deploy them somewhere
 [ ] Perform a test where the client retrieves a (the only) game metadata object.
+[ ] Probably migrate the multiplayer functionality to websockets. I'll still need this django stuff for user accounts and custom maps, though.
 
 Current Todo:
 [ ] readonly_fields does nothing
