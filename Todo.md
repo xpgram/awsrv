@@ -1,15 +1,29 @@
 
 Learn how to:
 [x] Modify tables/models
-[ ] Modify serve responses
+[ ] Modify serve responses (django)
+[ ] Merge Node/Socket.io and Django systems
+  [ ] And how to deploy them somewhere
 [ ] Perform a test where the client retrieves a (the only) game metadata object.
-
 
 Current Todo:
 [ ] readonly_fields does nothing
 
 
-Then I can work on the storage and serving of game data.
+Okay, I'm interjecting notes here because I don't remember what isn't useful below.
+
+Multiplayer will be handled by sockets.
+Django is still necessary for user accounts, auth, matchmaking and user custom maps.
+But sockets can handle in-game, client-to-client messages.
+
+I still need a model for how a game will retrieve the board state for a user that has disconnected and reconnected, but that'll be later. Probably the socket-code will also log moves to the game database.
+
+Here's a neat thing, though. When a user connects, though I don't know who, someone can be chosen to communicate the current board state, so long as they're already connected.
+If no one is, I guess the user will just have to reconstruct the board themselves by replaying all the known moves, but eh... we'll figure it out.
+
+Node can also maintain a working memory of the game session. However, this means the game must be in server ram until it's finished, so... hm.
+
+
 
 Multiplayer Model: What does the client need to send to the server?
 - User Account + Auth
@@ -28,19 +42,13 @@ Request (Receive):
 ^ Use this to construct a server-post/request demo.
 
 
-The models are mostly complete, but
-[ ] some pk's are combination keys
-[ ] some fields are required, so should be marked/handled as such
-  [ ] some are not, also, so handle that somehow
-
-
 [ ] Ensure users and non-users can't see gamedata they're not authorized for
   - Require a username + session_token on every http request? Is that enough?
 
 [ ] Establish a login service for aw
   [ ] Verify two clients (two browser instances) can login to different accounts.
+    [ ] Also allow cookies to save user session auth.
 
-[ ] Implement the gamedata table(s)
 
 [ ] Setup a test game.
   [ ] The players list should include my test accounts manually. We'll work on a players-browser later; I still don't have the complete UI refactor, I want new menus.
@@ -52,29 +60,8 @@ The models are mostly complete, but
       - If you have two clients with the same match open, this actually does introduce race conditions that could royally fuck the board sync. I don't need to worry about it *now,* but this is a severe problem. Either:
         - You cannot have two clients, or
         - You cannot have two clients viewing the same game-id
+        I think this is actually solved by sockets. You'll connect by sending your user auth, and if the node server realizes that you're already connected (to that room) it just refuses.
       The latter is probably not hard to implement. That said, how can I guarantee a player's connection is refused when they already have a client/game-id open?
   [ ] When it's not your turn, you cannot give orders.
     [ ] But you can still open the field menu and quit.
   [ ] Quitting (or closing the browser) and logging back in re-assembles the game board state.
-
-
-
-- When in an online match, the client must know which game-id it's playing. This is how it knows which game to query for net-play updates.
-- When you quit, this is just forgotten. But when you restart the match, this id is used to reassemble.
-
-
-
-Notes for GameMetadata class (because I don't know how/if migrate handles comments/strings):
-
-Metadata table:
-game_id map_ref scenario_options
-
-Players-list table:
-game_id player# player_ref
-  [game_id + player#] should be a unique, primary key
-
-I need to be able to lookup the player's list by account too.
-  - Lookup player accounts by game_id
-  - Lookup game_id/player_number by user account
-The second is more important, I think. I'm not even sure I'll need the first.
-But I should account for both query directions, if possible.
