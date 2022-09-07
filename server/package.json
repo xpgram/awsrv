@@ -1,0 +1,22 @@
+{
+  "name": "awsrv-server",
+  "version": "0.0.1",
+  "description": "Manages online and multiplayer services for aw.",
+  "main": "server.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch-ts": "tsc -w",
+    "watch-node": "nodemon dist/server.js",
+    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dei Valko",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.13",
+    "concurrently": "^7.4.0",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19",
+    "socket.io": "^4.5.2"
+  }
+}
