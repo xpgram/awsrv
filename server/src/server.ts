@@ -1,38 +1,39 @@
-// import * as Express from "express";
 import { Server } from "socket.io";
 
 const PORT = Number(process.env.PORT || 3001);
 
-// const app = Express();
-// app.set("port", PORT);
+// TODO Uninstall Express, unless I want it for something else.
 
-// const http = require('http').Server(app);   // TODO Make this an import
+
 const io = new Server(PORT);
-console.log(`listening on *:${PORT}`);
+console.log(`listening on *:${PORT}`);  // TODO Only on successful io construction
 
-// simple '/' endpoint sending a Hello World response
-// app.get("/", (req: any, res: any) => {
-//   res.send("hello world");
-// });
 
-// acknowledge user connections
+// TODO Remove; this was to differentiate clients during game-multiplayer testing
+let clients_connected = 0;
+
+// Handle user connections
 io.on("connection", socket => {
   console.log(`connected ${socket.id}`);
 
-  io.on("disconnect", reason => {
-    console.log(`disconnected ${socket.id} : ${reason}`);
+  clients_connected++;
+
+  // Inform the client which player number they are.
+  // TODO Do this by matching a user auth to a user in the Db; Do this on 'game join', not 'connetion'.
+  io.to(socket.id).emit('game session data', clients_connected);
+
+  // socket.join(`game_${gameId}`);  // This will be useful later, when GameId becomes the name of a room.
+  // Every socket, by default, is a member of its own room. This is how DMs can work.
+  // But other room strings can also be used. So, an ID string prepended with 'game_' will be
+  // a place that players of some game session can talk to each other.
+
+  socket.on("troop order", data => {
+    socket.broadcast.emit("troop order", data); // This sends the message to everyone but self, correct?
   })
+
+  socket.on("disconnect", reason => {
+    console.log(`disconnected ${socket.id} : ${reason}`);
+    clients_connected--;
+  })
+
 })
-
-// io.listen(PORT);
-
-// TODO Game.online is configured to initialize a socket.io object which.. *should* be connecting
-// to localhost:3001, so I'm just trying to connect the two instances.
-// The game runs on webpack-dev-server, so I may need to proxy a request or something.
-//
-// Ohhhhh this is a CORS problem. Okay, well I'll do that later.
-
-// start our simple server up on localhost:3000
-// const server = http.listen(PORT, () => {
-//   console.log(`listening on *:${PORT}`);
-// });
