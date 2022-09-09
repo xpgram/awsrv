@@ -27,8 +27,16 @@ io.on("connection", socket => {
   // But other room strings can also be used. So, an ID string prepended with 'game_' will be
   // a place that players of some game session can talk to each other.
 
+
+  // TODO Signal relay between clients. Is there a more compact way to do this?
   socket.on("troop order", data => {
+    console.log(`Relaying troop instruction`);
     socket.broadcast.emit("troop order", data); // This sends the message to everyone but self, correct?
+  })
+
+  socket.on("turn change", () => {
+    console.log(`Relaying signal: Turn Change`);
+    socket.broadcast.emit("turn change", undefined);
   })
 
   socket.on("disconnect", reason => {
