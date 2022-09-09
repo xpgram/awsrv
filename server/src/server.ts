@@ -10,7 +10,7 @@ console.log(`listening on *:${PORT}`);  // TODO Only on successful io constructi
 
 
 // TODO Remove; this was to differentiate clients during game-multiplayer testing
-let clients_connected = 0;
+let clients_connected = -1;
 
 // Handle user connections
 io.on("connection", socket => {
