@@ -29,13 +29,18 @@ io.on("connection", socket => {
 
 
   // TODO Signal relay between clients. Is there a more compact way to do this?
+  // I want something like:
+  //  broadcastEvents = ['troop order', 'turn change'];
+  //  socket.on( (ev, data) => {
+  //    if (broadcastEvents.includes(ev))
+  //      socket.broadcast.emit(ev, data);
+  //  })
   socket.on("troop order", data => {
-    console.log(`Relaying troop instruction`);
+    console.log(`game: instruction ${JSON.stringify(data)}`);
     socket.broadcast.emit("troop order", data); // This sends the message to everyone but self, correct?
   })
-
   socket.on("turn change", () => {
-    console.log(`Relaying signal: Turn Change`);
+    console.log(`game: turn change`);
     socket.broadcast.emit("turn change", undefined);
   })
 
@@ -43,5 +48,8 @@ io.on("connection", socket => {
     console.log(`disconnected ${socket.id} : ${reason}`);
     clients_connected--;
   })
+
+  // Server symboles '↪ ↛ ⤮ ⥇'
+  // Db symbols '⛁⛃'
 
 })
