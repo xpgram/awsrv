@@ -7,31 +7,24 @@ Learn how to:
 
 
 Current Todo:
+[ ] Deploy demo-ready (friends-ready) server
+  - But make sure both (node) and (django) survive the transition
 [ ] (django) readonly_fields does nothing
-[ ] (node) no node server exists
+[ ] (django) has user tables, and (node) asks about them
+[ ] (node) and (client) pass a bunch of Db-interaction tests
+  Test:
+  [ ] (client) can obtain a list of game-ids
+  [ ] (client) can write a troop-order under one of those game-ids
+  This is an alive check.
+  Then we'll have a mock-login setup via assigned player numbers.
+  Uh.. this needs to happen in reverse, though. You login, check game-ids, then get assigned a player number from the Players table.
 
+[ ] hardcoded game session is used to test game infrastructure
+  [ ] orders and turn changes are recorded to (django) as (node) receives them
+    - I don't think turn changes are necessary for replaying/rebuilding games on reconnect
+    [ ] GameSessionMessages are recorded to their game-id. If a matching table entry doesn't exist, they are not recorded.
+  [ ] Online games are reconstructed from existing instruction data on [GameStart]
 
-Okay, I'm interjecting notes here because I don't remember what isn't useful below.
-
-Multiplayer will be handled by sockets.
-Django is still necessary for user accounts, auth, matchmaking and user custom maps.
-But sockets can handle in-game, client-to-client messages.
-
-I still need a model for how a game will retrieve the board state for a user that has disconnected and reconnected, but that'll be later. Probably the socket-code will also log moves to the game database.
-
-Here's a neat thing, though. When a user connects, though I don't know who, someone can be chosen to communicate the current board state, so long as they're already connected.
-If no one is, I guess the user will just have to reconstruct the board themselves by replaying all the known moves, but eh... we'll figure it out.
-
-Node can also maintain a working memory of the game session. However, this means the game must be in server ram until it's finished, so... hm.
-
-
-Setup a test game:
-- Establish the localhost connection between aw and awsrv (node)
-- Irrespective of map, send all CmdInst data to server
-  - Confirm other connected sockets can recieve this
-  - Have them play these instructions out.
-  - Film this and show it to my friend :p
-- ...more to come.
 
 
 Multiplayer Model:
