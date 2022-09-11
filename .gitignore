@@ -193,4 +193,4 @@ dist
 ############
 
 db.sqlite3
-.env
+db/env/
