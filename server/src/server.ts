@@ -13,7 +13,7 @@ console.log(`listening on *:${PORT}`);  // TODO Only on successful io constructi
 let clients_connected = -1;
 
 // Handle user connections
-io.on("connection", socket => {
+io.on("connection", async socket => {
   console.log(`connected ${socket.id}`);
 
   clients_connected++;
@@ -51,5 +51,11 @@ io.on("connection", socket => {
 
   // Server symboles '↪ ↛ ⤮ ⥇'
   // Db symbols '⛁⛃'
+
+  // Test indicating that awdb is functional
+  // TODO async GET request to awdb
+  // const game_sessions = await fetch('http://localhost:3002/api/g/');
+    // TODO I just realized this project isn't proxied. Hm.
+  // io.to(socket.id).emit('db test', game_sessions);
 
 })
