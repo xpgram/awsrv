@@ -7,6 +7,10 @@ Learn how to:
 
 
 Current Todo:
+[ ] DB migration.
+  I don't want to redo a bunch of (well, a little) work, but Node+Django will be asynchronous. Or, it will require extra work to make sure socket waits for DB confirmation of any job. Conversely, *I could* just use something that integrates directly with Node and not have to worry about any of that whatsoever. Probably.
+  I'm looking into it.
+
 [ ] Deploy demo-ready (friends-ready) server
   - But make sure both (node) and (django) survive the transition
 [ ] (django) readonly_fields does nothing
