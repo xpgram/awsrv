@@ -47,8 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
     'rest_framework',
+    'corsheaders',
     'gamedata',
 ]
 
@@ -138,8 +138,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS Management
 
-CORS_ALLOWED_ORIGINS = [
+# CORS_ALLOWED_ORIGINS = [
+CORS_ORIGIN_WHITELIST = (
     "http://localhost:3000",
     "http://localhost:3001",
     "http://localhost:3002",    # Self
-]
+)
