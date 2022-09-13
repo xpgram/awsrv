@@ -9,18 +9,55 @@ const io = new Server(PORT);
 console.log(`listening on *:${PORT}`);  // TODO Only on successful io construction
 
 
-// TODO Remove; this was to differentiate clients during game-multiplayer testing
-let clients_connected = -1;
+// Record information about server performance.
+module metrics {
+  export let total_clients: number = 0;
+  export let total_messages: number = 0;
+  export let messages_this_activity_block: number = 0;
+  
+  export module timestamps {
+    /** The time this server started operating. */
+    export const start_server: number = Date.now();
+    /** The time used to measure messages per second. */
+    export let start_activity_block: number = start_server;
+  }
+}
+
+function addMessageCount() {
+  metrics.total_messages++;
+  metrics.messages_this_activity_block++;
+}
+
+// Periodically update the server log with performance measurements.
+const MILLIS = 1000;
+const UPDATE_INTERVAL = 10000;
+setInterval(() => {
+  const now = Date.now();
+  const activityBlockTime = (now - metrics.timestamps.start_activity_block) / MILLIS;
+  const msgCount = metrics.messages_this_activity_block;
+  const msgPerSecond = msgCount / activityBlockTime;
+
+  // metrics.timestamps.start_activity_block = now - UPDATE_INTERVAL/2;
+    // TODO I need to know which messages to cull to keep the count accurate
+  metrics.timestamps.start_activity_block = now;
+  metrics.messages_this_activity_block = 0;
+
+  console.log(`[SERVER] Served ${msgCount} messages (${msgPerSecond.toFixed(2)}ms/s) between ${metrics.total_clients} sockets.`);
+}, UPDATE_INTERVAL);
+
 
 // Handle user connections
-io.on("connection", async socket => {
+io.on("connect", async socket => {
   console.log(`connected ${socket.id}`);
-
-  clients_connected++;
+  
+  // Update server metrics info
+  metrics.total_clients++;
+  socket.onAny(addMessageCount);
+  socket.onAnyOutgoing(addMessageCount);
 
   // Inform the client which player number they are.
   // TODO Do this by matching a user auth to a user in the Db; Do this on 'game join', not 'connetion'.
-  io.to(socket.id).emit('game session data', clients_connected);
+  io.to(socket.id).emit('game session data', metrics.total_clients - 1);
 
   // socket.join(`game_${gameId}`);  // This will be useful later, when GameId becomes the name of a room.
   // Every socket, by default, is a member of its own room. This is how DMs can work.
@@ -46,7 +83,7 @@ io.on("connection", async socket => {
 
   socket.on("disconnect", reason => {
     console.log(`disconnected ${socket.id} : ${reason}`);
-    clients_connected--;
+    metrics.total_clients--;
   })
 
   // Server symboles '↪ ↛ ⤮ ⥇'
