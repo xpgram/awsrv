@@ -2,8 +2,6 @@ import { Server } from "socket.io";
 
 const PORT = Number(process.env.PORT || 3001);
 
-// TODO Uninstall Express, unless I want it for something else.
-
 
 const io = new Server(PORT);
 console.log(`listening on *:${PORT}`);  // TODO Only on successful io construction
@@ -56,14 +54,13 @@ io.on("connect", async socket => {
   socket.onAnyOutgoing(addMessageCount);
 
   // Inform the client which player number they are.
-  // TODO Do this by matching a user auth to a user in the Db; Do this on 'game join', not 'connetion'.
+  // TODO Do this by matching a user auth to a user in the Db; Do this on 'game join', not 'connection'.
   io.to(socket.id).emit('game session data', metrics.total_clients - 1);
 
   // socket.join(`game_${gameId}`);  // This will be useful later, when GameId becomes the name of a room.
   // Every socket, by default, is a member of its own room. This is how DMs can work.
   // But other room strings can also be used. So, an ID string prepended with 'game_' will be
   // a place that players of some game session can talk to each other.
-
 
   // TODO Signal relay between clients. Is there a more compact way to do this?
   // I want something like:
@@ -86,13 +83,7 @@ io.on("connect", async socket => {
     metrics.total_clients--;
   })
 
-  // Server symboles '↪ ↛ ⤮ ⥇'
-  // Db symbols '⛁⛃'
-
-  // Test indicating that awdb is functional
-  // TODO async GET request to awdb
-  // const game_sessions = await fetch('http://localhost:3002/api/g/');
-    // TODO I just realized this project isn't proxied. Hm.
-  // io.to(socket.id).emit('db test', game_sessions);
+  // Server log symbols '↪ ↛ ⤮ ⥇'
+  // Db log symbols '⛁⛃'
 
 })
