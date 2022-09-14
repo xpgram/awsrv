@@ -1,3 +1,7 @@
+//@ts-expect-error
+import * as cmd from "node-cmd";
+import * as bodyParser from "body-parser";
+import * as crypto from "crypto";
 import * as express from "express";
 import * as cors from "cors";
 import * as http from "http";
@@ -20,6 +24,30 @@ app.use(cors({
   origin: "*",
   optionsSuccessStatus: 200,
 }));
+
+// Setup github webhook for glitch
+if (!process.env.localdevelopment) {
+  app.use(bodyParser.json());
+  app.post('/git', (req, res) => {
+    let hmac = crypto.createHmac('sha1', process.env.SECRET);
+    let sig = `sha1=${hmac.update(JSON.stringify(req.body)).digest('hex')}`;
+
+    if (req.headers['x-github-event'] === 'push' && sig === req.headers['x-hub-signature']) {
+      cmd.run('chmod 777 ./git.sh');
+
+      cmd.get('./git.sh', (err: any, data: any) => {
+        if (data)
+          console.log(data);
+        if (err)
+          console.log(err);
+      })
+
+      cmd.run('refresh');
+    }
+
+    return res.sendStatus(200);
+  })
+}
 
 // Page-direct setup
 app.get('/', (req, res) => {
