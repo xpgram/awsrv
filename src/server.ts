@@ -126,7 +126,7 @@ module metrics {
     const interval_minutes = 20;
     post(`Metrics posting active; occurring every ${interval_minutes} minutes.`);
 
-    const interval_millis = 20 * 60 * MILLIS;
+    const interval_millis = interval_minutes * 60 * MILLIS;
     setInterval(logServerMetrics, interval_millis);
   }
 }
@@ -157,7 +157,7 @@ io.on("connect", async socket => {
     console.log(`game: instruction ${JSON.stringify(data)}`);
     socket.broadcast.emit("troop order", data); // This sends the message to everyone but self, correct?
   })
-  
+
   socket.on("turn change", () => {
     console.log(`game: turn change`);
     socket.broadcast.emit("turn change", undefined);
