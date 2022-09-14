@@ -4,18 +4,24 @@
   "description": "Manages online and multiplayer services for aw.",
   "main": "server.ts",
   "scripts": {
+    "start": "node dist/server.js",
     "build": "tsc",
     "watch-ts": "tsc -w",
     "watch-node": "nodemon dist/server.js",
-    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "localserver": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dei Valko",
   "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
-    "concurrently": "^7.4.0",
-    "nodemon": "^2.0.19",
     "socket.io": "^4.5.2",
     "typescript": "^4.8.3"
+  },
+  "devDependencies": {
+    "concurrently": "^7.4.0",
+    "nodemon": "^2.0.19"
   }
 }
