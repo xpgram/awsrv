@@ -1,10 +1,14 @@
 
 
 Current Todo:
-[ ] Deploy socket.io system to Glitch
+[x] Deploy socket.io system to Glitch
 [ ] Setup backend on glitch for db tests
   [ ] Match local dev-server to Glitch's backend system
   [ ] Log troop commands to the db and setup a couple dummy accounts for the alive check
+
+It appears to be fine, but
+[ ] Downgrade packages to be compatible with Glitch's node 10.x and npm 6.14.x
+[ ] Or tell Glitch to use later versions
 
 
 
