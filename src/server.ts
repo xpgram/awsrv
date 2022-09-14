@@ -27,6 +27,7 @@ app.use(cors({
 
 // Setup github webhook for glitch
 if (!process.env.localdevelopment) {
+  console.log('github webhook enabled');
   app.use(bodyParser.json());
   app.post('/git', (req, res) => {
     let hmac = crypto.createHmac('sha1', process.env.SECRET);
