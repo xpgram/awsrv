@@ -4,7 +4,7 @@
   "description": "Manages online and multiplayer services for aw.",
   "main": "server.ts",
   "scripts": {
-    "start": "tsc; node dist/server.js",
+    "start": "node dist/server.js",
     "build": "tsc",
     "watch-ts": "tsc -w",
     "watch-node": "nodemon dist/server.js",
