@@ -132,6 +132,8 @@ module metrics {
   }
 }
 
+metrics.startMetricsLogging();
+
 
 // Handle user connections
 io.on("connect", async socket => {
