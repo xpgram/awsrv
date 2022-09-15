@@ -30,6 +30,8 @@ if (!process.env.localdevelopment) {
   console.log('github webhook enabled');
   app.use(bodyParser.json());
   app.post('/git', (req, res) => {
+    console.log('push to master detected; rebuilding...');
+
     let hmac = crypto.createHmac('sha1', process.env.SECRET);
     let sig = `sha1=${hmac.update(JSON.stringify(req.body)).digest('hex')}`;
 
