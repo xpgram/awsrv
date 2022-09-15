@@ -1,5 +1,5 @@
 {
-  "name": "awsrv-server",
+  "name": "awsrv",
   "version": "0.0.1",
   "description": "Manages online and multiplayer services for aw.",
   "main": "server.ts",
@@ -8,11 +8,15 @@
     "build": "tsc",
     "watch-ts": "tsc -w",
     "watch-node": "nodemon dist/server.js",
-    "localserver": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "local": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dei Valko",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xpgram/awsrv.git"
+  },
   "engines": {
     "node": "18.x"
   },
