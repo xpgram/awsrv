@@ -1,10 +1,10 @@
 //@ts-expect-error
-import * as cmd from "node-cmd";
-import * as bodyParser from "body-parser";
-import * as crypto from "crypto";
-import * as express from "express";
-import * as cors from "cors";
-import * as http from "http";
+import cmd = require("node-cmd");
+import bodyParser = require("body-parser");
+import crypto = require("crypto");
+import express = require("express");
+import cors = require("cors");
+import http = require("http");
 import { Server } from "socket.io";
 
 
@@ -44,6 +44,7 @@ if (!process.env.localdevelopment) {
       })
 
       cmd.run('refresh');
+      cmd.run('tsc');
     }
 
     return res.sendStatus(200);
