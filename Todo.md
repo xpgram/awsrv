@@ -3,10 +3,8 @@ If you need to manually publish on Glitch:
 - ./git.sh
 - refresh
 - tsc
-- refresh?
+- refresh (if necessary)
 
-[ ] npm start => "tsc; node dist/server.js" is unnecessary.
-    invoke "tsc" in the github webhook
 
 Current Todo:
 [x] Deploy socket.io system to Glitch
