@@ -43,8 +43,7 @@ if (!process.env.localdevelopment) {
           console.log(err);
       })
 
-      cmd.run('refresh');
-      cmd.run('tsc');
+      cmd.run('tsc; refresh');
     }
 
     return res.sendStatus(200);
