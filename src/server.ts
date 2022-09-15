@@ -54,6 +54,9 @@ if (!process.env.localdevelopment) {
 app.get('/', (req, res) => {
   res.send('<h2>yo.</h2>');
 });
+app.get('/sock', (req, res) => {
+  res.send('');
+});
 
 
 // Enable server listening
@@ -136,7 +139,7 @@ metrics.startMetricsLogging();
 
 
 // Handle user connections
-io.on("connect", async socket => {
+io.of('/sock').on("connect", async socket => {
   console.log(`connected ${socket.id}`);
   
   // Update server metrics info
