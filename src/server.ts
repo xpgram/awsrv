@@ -1,3 +1,4 @@
+import dotenv = require("dotenv");
 //@ts-expect-error
 import cmd = require("node-cmd");
 import bodyParser = require("body-parser");
@@ -7,6 +8,8 @@ import cors = require("cors");
 import http = require("http");
 import { Server } from "socket.io";
 
+// Setup Environment
+dotenv?.config();
 
 // Page setup
 const app = express();
