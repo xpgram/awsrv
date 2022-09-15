@@ -36,9 +36,8 @@ if (!process.env.localdevelopment) {
     let sig = `sha1=${hmac.update(JSON.stringify(req.body)).digest('hex')}`;
 
     if (req.headers['x-github-event'] === 'push' && sig === req.headers['x-hub-signature']) {
-      cmd.run('chmod 777 ./git.sh');
 
-      cmd.get('./git.sh', (err: any, data: any) => {
+      cmd.runSync('./git.sh', (err: any, data: any) => {
         if (data)
           console.log(data);
         if (err)
