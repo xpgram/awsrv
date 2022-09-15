@@ -27,10 +27,10 @@ app.use(cors({
 
 // Setup github webhook for glitch
 if (!process.env.localdevelopment) {
-  console.log('github webhook enabled');
+  console.log('[SERVER] Github webhook enabled');
   app.use(bodyParser.json());
   app.post('/git', (req, res) => {
-    console.log('push to master detected; rebuilding...');
+    console.log('[SERVER] Push to origin/master detected; rebuilding...');
 
     let hmac = crypto.createHmac('sha1', process.env.SECRET);
     let sig = `sha1=${hmac.update(JSON.stringify(req.body)).digest('hex')}`;
@@ -69,7 +69,7 @@ const PORT = Number(
 );
 
 server.listen(PORT, () => {
-  console.log(`listening on *:${PORT}`);
+  console.log(`[SERVER] Listening on *:${PORT}`);
 })
 
 
