@@ -159,7 +159,11 @@ io.on("connect", socket => {
   // TODO Do this by matching a user auth to a user in the Db; Do this on 'game join', not 'connection'.
   socket.on('request player number', () => {
     metrics.players.push(socket.id);
-    io.to(socket.id).emit('game session data', metrics.players.findIndex(id => socket.id === id));
+    const plnum = metrics.players.findIndex(id => socket.id === id) ?? -1;
+
+    console.log(`assigning player ${plnum} to ${socket.id}`);
+    console.log(metrics.players);
+    io.to(socket.id).emit('game session data', plnum);
   });
 
   // TODO Signal relay between clients. Is there a more compact way to do this?
