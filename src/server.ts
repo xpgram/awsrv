@@ -57,8 +57,9 @@ if (!process.env.localdevelopment) {
 
 // Page-direct setup
 app.get('/', (req, res) => {
-  res.send('<h2>yo.</h2>');
+  res.sendFile(__dirname + '/pages/server-chat.html');
 });
+
 app.get('/sock', (req, res) => {
   res.send('');
 });
@@ -84,6 +85,8 @@ module metrics {
   // TODO These should be readonly.
   export let total_messages: number = 0;
   export let clients_connected: number = 0;
+
+  export let players: string[] = [];
 
   let clients_this_activity_block: number = 0;
   let messages_this_activity_block: number = 0;
@@ -154,7 +157,10 @@ io.on("connect", socket => {
 
   // Inform the client which player number they are.
   // TODO Do this by matching a user auth to a user in the Db; Do this on 'game join', not 'connection'.
-  io.to(socket.id).emit('game session data', metrics.clients_connected - 1);
+  socket.on('request player number', () => {
+    metrics.players.push(socket.id);
+    io.to(socket.id).emit('game session data', metrics.players.findIndex(id => socket.id === id));
+  });
 
   // TODO Signal relay between clients. Is there a more compact way to do this?
   // I want something like:
@@ -184,6 +190,7 @@ io.on("connect", socket => {
   socket.on("disconnect", reason => {
     console.log(`disconnected ${socket.id} : ${reason}`);
     metrics.uncountClient();
+    metrics.players = metrics.players.filter(id => socket.id !== id);
   })
 
   // Server log symbols '↪ ↛ ⤮ ⥇'
