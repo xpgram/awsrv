@@ -17,6 +17,7 @@ const server = http.createServer(app);
 
 // Socket setup
 const io = new Server(server, {
+  path: "/sock",
   cors: {
     origin: "*",
     methods: ['PUT', 'GET', 'POST', 'DELETE', 'OPTIONS'],
@@ -143,7 +144,7 @@ metrics.startMetricsLogging();
 
 
 // Handle user connections
-io.of('/sock').on("connect", async socket => {
+io.on("connect", socket => {
   console.log(`connected ${socket.id}`);
   
   // Update server metrics info
@@ -171,6 +172,12 @@ io.of('/sock').on("connect", async socket => {
   socket.on("turn change", () => {
     console.log(`game: turn change`);
     socket.broadcast.emit("turn change", undefined);
+  })
+
+  socket.on("chat message", (msg: string) => {
+    const preview = (msg.length > 10) ? `${msg.slice(0, 10)}...` : msg;
+    console.log(`forwarding chat message: ${preview}`);
+    socket.broadcast.emit("chat message", msg);
   })
 
   socket.on("disconnect", reason => {
