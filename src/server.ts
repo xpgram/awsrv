@@ -175,7 +175,8 @@ io.on("connect", socket => {
   })
 
   socket.on("chat message", (msg: string) => {
-    const preview = (msg.length > 10) ? `${msg.slice(0, 10)}...` : msg;
+    const maxc = 20;
+    const preview = (msg.length > maxc) ? `${msg.slice(0, maxc)}...` : msg;
     console.log(`forwarding chat message: ${preview}`);
     socket.broadcast.emit("chat message", msg);
   })
