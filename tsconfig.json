@@ -9,6 +9,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "baseUrl": ".",
+    "composite": true,
     "paths": {
       "*": [
         "node_modules/",
@@ -18,5 +19,6 @@
   },
   "include": [
     "src/**/*"
-  ]
+  ],
+  "references": []
 }
