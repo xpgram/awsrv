@@ -1,0 +1,1 @@
+This folder contains types which describe the communication strategy between the server and connected clients. Therefore, tsconfig in aw must point to the awsrv project folder via its "references" field.

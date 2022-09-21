@@ -7,6 +7,10 @@ import express = require("express");
 import cors = require("cors");
 import http = require("http");
 import { Server } from "socket.io";
+import { ClientToServerEvents } from "ClientToServerEvents";
+import { ServerToClientEvents } from "ServerToClientEvents";
+import { InterServerEvents } from "InterServerEvents";
+import { SocketData } from "SocketData";
 
 // Setup Environment
 dotenv?.config();
@@ -16,14 +20,17 @@ const app = express();
 const server = http.createServer(app);
 
 // Socket setup
-const io = new Server(server, {
-  path: "/sock",
-  cors: {
-    origin: "*",
-    methods: ['PUT', 'GET', 'POST', 'DELETE', 'OPTIONS'],
-    credentials: false,
+const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(
+  server,
+  {
+    path: "/sock",
+    cors: {
+      origin: "*",
+      methods: ['PUT', 'GET', 'POST', 'DELETE', 'OPTIONS'],
+      credentials: false,
+    }
   }
-})
+);
 app.use(cors({
   origin: "*",
   optionsSuccessStatus: 200,
@@ -154,13 +161,13 @@ io.on("connect", socket => {
 
   // Inform the client which player number they are.
   // TODO Do this by matching a user auth to a user in the Db; Do this on 'game join', not 'connection'.
-  socket.on('request player number', () => {
+  socket.on('RequestPlayerNumber', () => {
     metrics.players.push(socket.id);
     const plnum = metrics.players.findIndex(id => socket.id === id) ?? -1;
 
     console.log(`assigning player ${plnum} to ${socket.id}`);
     console.log(metrics.players);
-    io.to(socket.id).emit('game session data', plnum);
+    io.to(socket.id).emit('GameSessionData', plnum);
   });
 
   // TODO Signal relay between clients. Is there a more compact way to do this?
@@ -171,21 +178,21 @@ io.on("connect", socket => {
   //      socket.broadcast.emit(ev, data);
   //  })
 
-  socket.on("troop order", data => {
+  socket.on("TroopOrder", data => {
     console.log(`game: instruction ${JSON.stringify(data)}`);
-    socket.broadcast.emit("troop order", data); // This sends the message to everyone but self, correct?
+    socket.broadcast.emit("TroopOrder", data); // This sends the message to everyone but self, correct?
   })
 
-  socket.on("turn change", () => {
+  socket.on("EndTurn", () => {
     console.log(`game: turn change`);
-    socket.broadcast.emit("turn change", undefined);
+    socket.broadcast.emit("EndTurn");
   })
 
-  socket.on("chat message", (msg: string) => {
+  socket.on("ChatMessage", (msg: string) => {
     const maxc = 20;
     const preview = (msg.length > maxc) ? `${msg.slice(0, maxc)}...` : msg;
     console.log(`forwarding chat message: ${preview}`);
-    socket.broadcast.emit("chat message", msg);
+    socket.broadcast.emit("ChatMessage", msg);
   })
 
   socket.on("disconnect", reason => {
