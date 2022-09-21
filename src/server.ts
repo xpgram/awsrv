@@ -159,33 +159,42 @@ io.on("connect", socket => {
   socket.onAny(metrics.countMessage);
   socket.onAnyOutgoing(metrics.countMessage);
 
+  // Persistence variables
+  // TODO Require client to send gameId on every message? SocketData, maybe?
+  let gameroom: string;
+
   // Inform the client which player number they are.
   // TODO Do this by matching a user auth to a user in the Db; Do this on 'game join', not 'connection'.
-  socket.on('RequestPlayerNumber', () => {
+  socket.on('RequestPlayerNumber', mapname => {
+    gameroom = `game_${mapname}`;
+    socket.join(gameroom); // TODO Temp/simple game segmentation
+
     metrics.players.push(socket.id);
-    const plnum = metrics.players.findIndex(id => socket.id === id) ?? -1;
 
-    console.log(`assigning player ${plnum} to ${socket.id}`);
-    console.log(metrics.players);
+    const memberCount = io.sockets.adapter.rooms.get(gameroom).size;
+    const plnum = memberCount - 1;  // zero-based numbering
+
+    // TODO P0 and P1 -> P0 leaves and comes back, still P0; no duplicate P1's
+    //   This should come naturally when I add Db stuff
+
+    console.log(`assigning player ${plnum} to ${socket.id} in ${gameroom}`);
     io.to(socket.id).emit('GameSessionData', plnum);
-  });
+  })
 
-  // TODO Signal relay between clients. Is there a more compact way to do this?
-  // I want something like:
-  //  broadcastEvents = ['troop order', 'turn change'];
-  //  socket.on( (ev, data) => {
-  //    if (broadcastEvents.includes(ev))
-  //      socket.broadcast.emit(ev, data);
-  //  })
+  socket.on('LeaveGame', () => {
+    console.log(`socket ${socket.id} left ${gameroom}`);
+    socket.leave(gameroom);
+    gameroom = '';
+  })
 
   socket.on("TroopOrder", data => {
-    console.log(`game: instruction ${JSON.stringify(data)}`);
-    socket.broadcast.emit("TroopOrder", data); // This sends the message to everyone but self, correct?
+    console.log(`${gameroom}: instruction ${JSON.stringify(data)}`);
+    socket.to(gameroom).emit("TroopOrder", data);
   })
 
   socket.on("EndTurn", () => {
-    console.log(`game: turn change`);
-    socket.broadcast.emit("EndTurn");
+    console.log(`${gameroom}: turn change`);
+    socket.to(gameroom).emit("EndTurn");
   })
 
   socket.on("ChatMessage", (msg: string) => {

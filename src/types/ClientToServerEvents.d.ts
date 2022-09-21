@@ -2,7 +2,8 @@ import { TroopOrderData } from "PacketTypes";
 
 /**  */
 export interface ClientToServerEvents {
-  RequestPlayerNumber: () => void;
+  RequestPlayerNumber: (mapname: string) => void;
+  LeaveGame: () => void;
 
   // Below: Client-to-client relay events
 
