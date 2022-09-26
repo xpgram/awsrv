@@ -33,7 +33,7 @@ export interface TroopOrderData {
   focal?: JsonPoint;
 
   /** The seed for any random nummber generation. */
-  seed?: number;
+  seed: number;
 
   /** A list of of the actor's held units to drop onto the map. */
   drop: TroopDropData[];
