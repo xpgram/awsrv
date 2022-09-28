@@ -38,7 +38,7 @@ app.use(cors({
 }));
 
 // Setup github webhook for glitch
-if (!process.env.localdevelopment) {
+if (false /*!process.env.localdevelopment*/) {  // no webhook; deliberate publishing from master
   console.log('[SERVER] Github webhook enabled');
   app.use(bodyParser.json());
   app.post('/git', (req, res) => {
